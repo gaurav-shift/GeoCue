@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { Prisma } from "../generated/prisma/client";
 import UserRepository from "../repositories/user-repository";
 import AppError from "../errors/AppError";
+import { hashPassword } from "../utils/password";
 
 class UserService {
   private userRepository: UserRepository;
@@ -20,8 +21,8 @@ class UserService {
         "USER_ALREADY_EXISTS"
       );
     }
-
-    return this.userRepository.create(data);
+    const hashedPassword = await hashPassword(data.password);
+    return this.userRepository.create({ ...data, password: hashedPassword });
   }
 
   async getUserByEmail(email: string) {
