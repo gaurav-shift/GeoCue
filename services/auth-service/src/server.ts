@@ -5,6 +5,7 @@ import { serverConfig } from "./config/serverConfig";
 import { prisma } from "./config/prisma";
 import errorMiddleware from "./middlewares/error-middleware";
 import apiRoutes from "./routes";
+import { redis } from "./config/redis";
 
 const app = express();
 
@@ -17,6 +18,9 @@ const setupAndStartServer = async () => {
   try {
     await prisma.$connect();
     console.log("Connected to PostgreSQL");
+
+    await redis.ping();
+    console.log("Connected to Redis");
 
     app.use("/api", apiRoutes);
 

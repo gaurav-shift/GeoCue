@@ -32,6 +32,31 @@ class UserService {
   async getById(id:string){
     return this.userRepository.getById(id);
   }
+
+  async createUserAfterVerification(
+  name: string,
+  email: string,
+  password: string
+) {
+  const existingUser = await this.userRepository.getByEmail(email);
+
+  if (existingUser) {
+    throw new AppError(
+      `User already exists with email ${email}`,
+      StatusCodes.CONFLICT,
+      "USER_ALREADY_EXISTS"
+    );
+  }
+
+  const hashedPassword = await hashPassword(password);
+
+  return this.userRepository.create({
+    name,
+    email,
+    password: hashedPassword,
+  });
+}
+
 }
 
 export default UserService;

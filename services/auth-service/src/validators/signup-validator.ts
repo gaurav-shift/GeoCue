@@ -15,3 +15,19 @@ export const signupValidator = [
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
 ];
+
+export const setPasswordValidator = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Name is required"),
+
+  body("email")
+    .trim()
+    .isEmail()
+    .withMessage("Please provide a valid email"),
+
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
+];
